@@ -1,0 +1,70 @@
+*{
+    font-family: 'Merriweather', serif;
+
+}
+body{
+    
+    background-image: url(uns.jpg.jpg);
+    background-repeat: no-repeat;
+   background-size: 300vh 100vh ;
+}
+.container{
+    /* background-image: url(back.jpg) ; */
+    
+    /* padding: 5px 10px; */
+    /* border-radius: 10px; */
+    /* z-index: -1; */
+    
+    width: 40%;
+    margin-left: 400px;
+    margin-top: 50px;
+    
+}
+#output{
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+ .imagee{
+
+
+    margin: auto;
+    
+} 
+#accept{
+    outline: none;
+    color: transparent;
+}
+.imgdiv{
+    margin-left: 200px;
+}
+form.wrapper {
+    background: #c5baba7a;
+}
+/* .wrapper {
+    z-index: 222;
+} */
+/* .mywrap::before {content: '';display: block;height: 100%;width: 100%;background: red;position: absolute;top: 0;opacity: 0.2;left: 0;} */
+.sign{
+    margin-top: 0;
+    margin-left: 250px;
+
+}
+#Submit{
+    margin-left: 250px;
+    cursor: pointer;
+    
+}
+.details{
+    justify-content: center;
+
+    margin: 13px 45px;
+    padding: 12px 11px;
+    border: 2px solid red;
+    border-radius: 10px;
+
+    /* box-sizing: border-box; */
+
+    width: 100px 100px;
+}
