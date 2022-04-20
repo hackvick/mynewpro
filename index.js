@@ -6,11 +6,14 @@ const app = express();
 const route = require('./v1/controller/route');
 const path=require('path')
 const server = require('http').createServer(app);
+const cors= require('cors')
+
 
 
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.static   ("views"));
+app.use(cors())
 app.use(bodyParser.urlencoded({
 
     extended:true
