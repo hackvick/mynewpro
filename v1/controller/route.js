@@ -10,7 +10,7 @@ router.post('/loginuser',Controller.usercontroller.loginuserdata);
 
 // router.get('/register',Controller.usercontroller.signupget);
 router.post('/signupuser',upload.single('Profile_Pic'),Controller.usercontroller.signuserdata);
-// router.post("/verify",Controller.usercontroller.matchmyotp)
+router.post("/verify",Controller.usercontroller.matchmyotp)
 // router.post("/sendotpagain",Controller.usercontroller.sendotpagain)
 router.post("/carregister",Controller.usercontroller.verify,upload.array('image'),Controller.usercontroller.carRegister)
 router.post('/bookthetaxi',upload.single('image'),Controller.usercontroller.bookMyTaxi)

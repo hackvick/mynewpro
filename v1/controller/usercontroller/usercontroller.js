@@ -302,44 +302,45 @@ module.exports = {
 
 async function bookMyTaxi(req,res) {
   try {
-    let pcordinates = [];
+    let pickup_cordinate = [];
     let pickupaddress = {};
     console.log(req.body.latitude);
     // console.log(req.body.longitude);
     if (req.body.latitude && req.body.longitude) {
-      pcordinates.push(Number(req.body.latitude));
-      pcordinates.push(Number(req.body.longitude));
-      pickupaddress.type = "point";
-      pickupaddress.pcordinates = pcordinates;
-      console.log(pcordinates + "first");
+      pickup_cordinate.push(Number(req.body.latitude))
+      pickup_cordinate.push(Number(req.body.longitude))
+      pickupaddress.type = "Point";
+      pickupaddress.pickup_cordinate = pickup_cordinate;
+      console.log(pickup_cordinate + "first");
       // console.log(pickupaddress.pcordinates);
       // console.log(req.body.latitude);
     }
     req.body.pickupaddress = pickupaddress;
-    console.log(pcordinates +  "second");
+    console.log(pickup_cordinate +  "second");
     
-    let dcordinates = [];
+    let drop_cordinates = [];
     let dropoffaddress = {};
     if (req.body.latitude && req.body.longitude) {
-      dcordinates.push(Number(req.body.latitude));
-      dcordinates.push(Number(req.body.longitude));
-      dropoffaddress.type = "point";
-      dropoffaddress.dcordinates = dcordinates;
+      drop_cordinates.push(Number(req.body.latitude))
+      drop_cordinates.push(Number(req.body.longitude))
+      dropoffaddress.type = "Point";
+      dropoffaddress.drop_cordinates = drop_cordinates;
     }
-    req.body.pickupaddress = pickupaddress;
+    req.body.dropoffaddress = dropoffaddress;
 
-    const Customers = new taxim.Booktaxi({
-      otp: req.body.otp,
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      passenger: req.body.passenger,
-      pickupaddres: pcordinates,
-      dropoffaddres: pcordinates,
-      selectdate: req.body.selectdate,
-      selecttime: req.body.selecttime,
-    });
-    await Customers.save();
+    // const Customers = new taxim.Booktaxi({
+      // otp: req.body.otp,
+      // name: req.body.name,
+      // email: req.body.email,
+      // phone: req.body.phone,
+      // passenger: req.body.passenger,
+      // pickupaddres: pcordinates,
+      // dropoffaddres: pcordinates,
+      // selectdate: req.body.selectdate,
+      // selecttime: req.body.selecttime,
+    // });
+
+    await taxim.Booktaxi(req.body).save();
 
     res.send("done");
   } catch (error) {
