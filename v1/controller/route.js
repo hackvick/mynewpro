@@ -1,7 +1,7 @@
 const Controller = require('./usercontroller/index');
 const model1=require("../../models/index")
 const express = require('express');
-const { mymulter, upload, booktaxi, ctaxi, verify } = require('./usercontroller/usercontroller');
+const { mymulter, upload, booktaxi, ctaxi, verify, showbookings } = require('./usercontroller/usercontroller');
 const usercontroller = require('./usercontroller/usercontroller');
 const router = express.Router();
 
@@ -14,7 +14,10 @@ router.post("/verify",Controller.usercontroller.matchmyotp)
 // router.post("/sendotpagain",Controller.usercontroller.sendotpagain)
 router.post("/carregister",Controller.usercontroller.verify,upload.array('image'),Controller.usercontroller.carRegister)
 router.post('/bookthetaxi',upload.single('image'),Controller.usercontroller.bookMyTaxi)
+// ===================================
 router.get('/showtaxi',Controller.usercontroller.showtaxi)
+router.get('/showbooking',Controller.usercontroller.showdriverbookings)
+router.get('/mycartype',usercontroller.mycartype)
 
 // router.post("/verification",sendot)
 

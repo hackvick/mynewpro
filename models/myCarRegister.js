@@ -35,6 +35,11 @@ const taxioschema= new schema({
     },
     driverId:{
         type:schema.Types.ObjectId,ref:"usersigndatas"
+    },
+    cartype:{
+        type:String,
+        enum:["Any Type","Hybrid","SUV","Luxury","Vans"]
+
     }
 
 

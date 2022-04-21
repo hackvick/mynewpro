@@ -182,6 +182,7 @@ async function getdata(req, res) {
     });
 }
 
+
 // ===================================================GetMyData Definataion===================================
 
 async function getmydata(req, res) {
@@ -236,37 +237,7 @@ const pic = multer.diskStorage({
 
 const upload = multer({ storage: pic });
 
-// ===========================lognitude===============================================
 
-// async function booktaxi(req, res) {
-//   try {
-//     let pcordinates = [];
-//     let pickupadd = {};
-//     if (req.body.latitude && req.body.longitude) {
-//       pcordinates.push(Number(req.body.latitude));
-//       pcordinates.push(Number(req.body.longitude));
-//       pickupadd.type = "point";
-//       pickupadd.pcordinates = pcordinates;
-//     }
-//     req.body.pickupadd = pickupadd;
-//     let dcordinates = [];
-//     let dropoffadd = {};
-//     if (req.body.latitude && req.body.longitude) {
-//       dcordinates.push(Number(req.body.latitude));
-//       dcordinates.push(Number(req.body.longitude));
-//       dropoffadd.type = point;
-//       dropoffadd.dcordinates = dcordinates;
-//     }
-//     req.body.pickupadd = pickupadd;
-//     let client = await clientModel.booktaxi(req.body).save();
-
-//     res.status(201);
-//     res.send(client);
-//     console.log(client);
-//   } catch (error) {
-//     res.status(404).send(error);
-//   }
-// }
 
 // ===========================================================================
 
@@ -289,12 +260,14 @@ module.exports = {
   showmeget: showmeget,
   servicesget: servicesget,
   findget: findget,
+  mycartype:mycartype,
   
   carRegister:carRegister,
   signuserdata: signuserdata,
   loginuserdata: loginuserdata,
   matchmyotp: matchmyotp,
-  showtaxi:showtaxi
+  showtaxi:showtaxi,
+  showdriverbookings:showdriverbookings
 };
 
 // =====================================================================
@@ -302,7 +275,7 @@ module.exports = {
 
 async function bookMyTaxi(req,res) {
   try {
-    let pickup_cordinate = [];
+    let pickup_cordinate  = [];
     let pickupaddress = {};
     console.log(req.body.latitude);
     // console.log(req.body.longitude);
@@ -311,6 +284,7 @@ async function bookMyTaxi(req,res) {
       pickup_cordinate.push(Number(req.body.longitude))
       pickupaddress.type = "Point";
       pickupaddress.pickup_cordinate = pickup_cordinate;
+      
       console.log(pickup_cordinate + "first");
       // console.log(pickupaddress.pcordinates);
       // console.log(req.body.latitude);
@@ -328,17 +302,7 @@ async function bookMyTaxi(req,res) {
     }
     req.body.dropoffaddress = dropoffaddress;
 
-    // const Customers = new taxim.Booktaxi({
-      // otp: req.body.otp,
-      // name: req.body.name,
-      // email: req.body.email,
-      // phone: req.body.phone,
-      // passenger: req.body.passenger,
-      // pickupaddres: pcordinates,
-      // dropoffaddres: pcordinates,
-      // selectdate: req.body.selectdate,
-      // selecttime: req.body.selecttime,
-    // });
+    
 
     await taxim.Booktaxi(req.body).save();
 
@@ -366,7 +330,8 @@ async function carRegister(req, res) {
     rate_hourly: req.body.rate_hourly,
     rate_per_day: req.body.rate_per_day,
     passenger: req.body.passenger,
-    driverId:idt
+    cartype:req.body.cartype,
+    driverId:idt,
   });
   // console.log(seller);
   // let role=["user","driver"]
@@ -583,7 +548,7 @@ function verify(req,res,next){
   const tokenslice = token.slice(7);
  console.log(tokenslice);
     jwt.verify(tokenslice,"adshashbdasbh",function(err,decode){
-      if(err) throw res.send("Pranjal kya krra hai tu")
+      if(err) throw res.send("You are not verified")
       req.data = decode._id
       console.log(decode);
    
@@ -593,6 +558,9 @@ function verify(req,res,next){
       
   })
 }
+// ============================================================================
+// ==========================================hybrid===================================
+//  
 // =========================================
 async function showtaxi(req,res){
   let mytaxi= await myCarRegister.CarRegistermodel.aggregate([
@@ -608,6 +576,8 @@ async function showtaxi(req,res){
           carname: "$name",
           modelname:"$model",
           vehicle_type:"$vehicle",
+          rate_hourly:"rate_hourly",
+          rate_per_day:"rate_per_day",
 
           drivername: "$users.FirstName",
           phone: "$users.Phone"
@@ -616,7 +586,51 @@ async function showtaxi(req,res){
   ])
   res.send(mytaxi)
 } 
-async function showbookings(req,res){
-  let mybooking= userdatas
 
+
+async function showdriverbookings(req,res){
+  try {
+    
+
+  let mybooking = await taxim.Booktaxi.aggregate([
+    {
+      $project:{
+        Name: "$name",
+        Time: "$time",
+        Phone: "$phone",
+        Pickup:"$pickupaddress",
+        Drop:"$dropoffaddress",
+        Passenger:"$passenger",
+        date:"$date",
+        cartype:"$cartype"
+               
+      }
+    }
+  ])
+  // let urbooking= mybooking.findOne(req.query)
+
+  
+  
+  res.send(mybooking)
+} catch (error) {
+    res.send(error)
 }
+}
+
+
+async function mycartype(req,res){
+  let mycartype=await myCarRegister.CarRegistermodel.find(req.query)
+  res.send(mycartype)
+}
+
+ async function boooked(req,res){
+   
+  const bookdata = await taxim.Booktaxi.updateOne(
+    { phone :  phone},
+
+    { $set: { booking_status: "Booked" } }
+  )
+
+
+ }
+
