@@ -1,6 +1,7 @@
 const mongoose=require("mongoose")
 const { stringify } = require("nodemon/lib/utils")
-const taxischema= new mongoose.Schema({
+const schema=mongoose.Schema
+const taxischema= new schema({
     name:{
         type:String,
         required:true
@@ -52,6 +53,9 @@ const taxischema= new mongoose.Schema({
     accepted_by:{
         type:String,
         default: "Pending"
+    },
+    userid:{
+        type:schema.Types.ObjectId,ref:"usersigndatas"
     }
     
         

@@ -267,7 +267,8 @@ module.exports = {
   loginuserdata: loginuserdata,
   matchmyotp: matchmyotp,
   showtaxi:showtaxi,
-  showdriverbookings:showdriverbookings
+  showdriverbookings:showdriverbookings,
+  clickthecar:clickthecar
 };
 
 // =====================================================================
@@ -275,6 +276,7 @@ module.exports = {
 
 async function bookMyTaxi(req,res) {
   try {
+    let custid=req.data
     let pickup_cordinate  = [];
     let pickupaddress = {};
     console.log(req.body.latitude);
@@ -302,11 +304,17 @@ async function bookMyTaxi(req,res) {
     }
     req.body.dropoffaddress = dropoffaddress;
 
-    
+    let mydata= await usersign.Userdetails.findOne({_id:req.data})
+    console.log(mydata);
+    if(mydata.UserType==="user"){
+      let apshabad=req.body;
+      apshabad.userid=req.data;
+      await taxim.Booktaxi(apshabad).save();
 
-    await taxim.Booktaxi(req.body).save();
-
-    res.send("done");
+        res.send("done");
+    }else{
+      res.send("You are not a user")
+    }
   } catch (error) {
 
     console.log(error);
@@ -544,13 +552,14 @@ async function sendotpagain(req, res) {
 // =================================================
 function verify(req,res,next){  
   const token = req.header("authorization")
-  console.log(token + "verify side token");
+  // console.log(token + "verify side token");
   const tokenslice = token.slice(7);
- console.log(tokenslice);
+//  console.log(tokenslice);
     jwt.verify(tokenslice,"adshashbdasbh",function(err,decode){
       if(err) throw res.send("You are not verified")
       req.data = decode._id
-      console.log(decode);
+      console.log("verified");
+      // console.log(decode);
    
       // if(err)
       //   res.send("token is not set");
@@ -619,7 +628,9 @@ async function showdriverbookings(req,res){
 
 
 async function mycartype(req,res){
-  let mycartype=await myCarRegister.CarRegistermodel.find(req.query)
+  // console.log(req.query);
+  let mycartype=await myCarRegister.CarRegistermodel.find(req.query,{_id:0,name:1,template_no:1,rate_hourly:1,rate_per_day: 1,passenger: 1})
+  console.log(mycartype);
   res.send(mycartype)
 }
 
@@ -630,7 +641,27 @@ async function mycartype(req,res){
 
     { $set: { booking_status: "Booked" } }
   )
-
-
  }
+
+ async function clickthecar(req,res){
+   try{
+     
+    // console.log(req.query);
+    const themore=req.query
+    // console.log(themore,"Myid");
+     const data = await taxim.Booktaxi.findOne(themore);
+     console.log(data.userid,"you");
+    //  console.log(data);
+
+    let userdata=await taxim.Booktaxi.updateOne({userid:data.userid},
+      { $set: { booking_status: "Booked", accepted_by:data.name } })
+    res.send("done")
+   }catch(error){
+        res.send(error)
+   }
+ }
+
+
+
+
 

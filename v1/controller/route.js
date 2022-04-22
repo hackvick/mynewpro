@@ -13,19 +13,19 @@ router.post('/signupuser',upload.single('Profile_Pic'),Controller.usercontroller
 router.post("/verify",Controller.usercontroller.matchmyotp)
 // router.post("/sendotpagain",Controller.usercontroller.sendotpagain)
 router.post("/carregister",Controller.usercontroller.verify,upload.array('image'),Controller.usercontroller.carRegister)
-router.post('/bookthetaxi',upload.single('image'),Controller.usercontroller.bookMyTaxi)
+router.post('/bookthetaxi',upload.single('image'),Controller.usercontroller.verify,Controller.usercontroller.bookMyTaxi)
+router.post('/clickthecar',Controller.usercontroller.verify,Controller.usercontroller.clickthecar)
 // ===================================
 router.get('/showtaxi',Controller.usercontroller.showtaxi)
 router.get('/showbooking',Controller.usercontroller.showdriverbookings)
 router.get('/mycartype',usercontroller.mycartype)
-
 // router.post("/verification",sendot)
+
 
 router.get('/registerr',Controller.usercontroller.signupget);
 router.post('/login',Controller.usercontroller.login);
 
 
-// router.get('/register',Controller.usercontroller.signupget);
 // router.get('/register',Controller.usercontroller.signupget);
 // router.get('/register',Controller.usercontroller.signupget);
 // router.get('/register',Controller.usercontroller.signupget);
