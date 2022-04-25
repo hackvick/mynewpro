@@ -182,7 +182,6 @@ async function getdata(req, res) {
     });
 }
 
-
 // ===================================================GetMyData Definataion===================================
 
 async function getmydata(req, res) {
@@ -237,18 +236,16 @@ const pic = multer.diskStorage({
 
 const upload = multer({ storage: pic });
 
-
-
 // ===========================================================================
 
 module.exports = {
-  verify:verify,
+  verify: verify,
   login: login,
   register: register,
   sendotpverificationemail: sendotpverificationemail,
   sendotpagain: sendotpagain,
   upload: upload,
-  bookMyTaxi:bookMyTaxi,
+  bookMyTaxi: bookMyTaxi,
   getdata: getdata,
   getmydata: getmydata,
   topget: topget,
@@ -260,76 +257,73 @@ module.exports = {
   showmeget: showmeget,
   servicesget: servicesget,
   findget: findget,
-  mycartype:mycartype,
-  
-  carRegister:carRegister,
+  mycartype: mycartype,
+
+  carRegister: carRegister,
   signuserdata: signuserdata,
   loginuserdata: loginuserdata,
   matchmyotp: matchmyotp,
-  showtaxi:showtaxi,
-  showdriverbookings:showdriverbookings,
-  clickthecar:clickthecar
+  showtaxi: showtaxi,
+  showdriverbookings: showdriverbookings,
+  cancelbooking: cancelbooking,
+  bookthiscar: bookthiscar,
 };
 
 // =====================================================================
 
-
-async function bookMyTaxi(req,res) {
+async function bookMyTaxi(req, res) {
   try {
-    let custid=req.data
-    let pickup_cordinate  = [];
+    let custid = req.data;
+    let pickup_cordinate = [];
     let pickupaddress = {};
     console.log(req.body.latitude);
     // console.log(req.body.longitude);
     if (req.body.latitude && req.body.longitude) {
-      pickup_cordinate.push(Number(req.body.latitude))
-      pickup_cordinate.push(Number(req.body.longitude))
+      pickup_cordinate.push(Number(req.body.latitude));
+      pickup_cordinate.push(Number(req.body.longitude));
       pickupaddress.type = "Point";
       pickupaddress.pickup_cordinate = pickup_cordinate;
-      
+
       console.log(pickup_cordinate + "first");
       // console.log(pickupaddress.pcordinates);
       // console.log(req.body.latitude);
     }
     req.body.pickupaddress = pickupaddress;
-    console.log(pickup_cordinate +  "second");
-    
+    console.log(pickup_cordinate + "second");
+
     let drop_cordinates = [];
     let dropoffaddress = {};
     if (req.body.latitude && req.body.longitude) {
-      drop_cordinates.push(Number(req.body.latitude))
-      drop_cordinates.push(Number(req.body.longitude))
+      drop_cordinates.push(Number(req.body.latitude));
+      drop_cordinates.push(Number(req.body.longitude));
       dropoffaddress.type = "Point";
       dropoffaddress.drop_cordinates = drop_cordinates;
     }
     req.body.dropoffaddress = dropoffaddress;
 
-    let mydata= await usersign.Userdetails.findOne({_id:req.data})
+    let mydata = await usersign.Userdetails.findOne({ _id: req.data });
     console.log(mydata);
-    if(mydata.UserType==="user"){
-      let apshabad=req.body;
-      apshabad.userid=req.data;
+    if (mydata.UserType === "user") {
+      let apshabad = req.body;
+      apshabad.userid = req.data;
       await taxim.Booktaxi(apshabad).save();
 
-        res.send("done");
-    }else{
-      res.send("You are not a user")
+      res.send("done");
+    } else {
+      res.send("You are not a user");
     }
   } catch (error) {
-
     console.log(error);
     res.send(error);
   }
 }
 
 async function carRegister(req, res) {
-
-
   // try {
-    console.log(req.body); 
-    const idt = req.data
-    console.log(idt);
-    const seller = new myCarRegister.CarRegistermodel({    
+  console.log(req.body);
+  const idt = req.data;
+  console.log(idt);
+  const seller = new myCarRegister.CarRegistermodel({
     name: req.body.name,
     model: req.body.model,
     chessy_num: req.body.chessy_num,
@@ -338,20 +332,20 @@ async function carRegister(req, res) {
     rate_hourly: req.body.rate_hourly,
     rate_per_day: req.body.rate_per_day,
     passenger: req.body.passenger,
-    cartype:req.body.cartype,
-    driverId:idt,
+    cartype: req.body.cartype,
+    driverId: idt,
   });
   // console.log(seller);
   // let role=["user","driver"]
   // console.log(driverId);
   console.log(req.data);
-  const data = await usersign.Userdetails.findOne({_id:req.data});
+  const data = await usersign.Userdetails.findOne({ _id: req.data });
   console.log(data);
 
   // console.log(data);
   if (data.UserType == "driver") {
     await seller.save();
-  
+
     const idd = seller._id;
     if (req.files.length > 0) {
       await req.files.forEach((file) => {
@@ -362,16 +356,13 @@ async function carRegister(req, res) {
         });
         img.save();
       });
-    
-    
-    res.send("donedanadone");
-    };
-  }else{
-    res.send("Uh are not fuckin driver")
+
+      res.send("donedanadone");
+    }
+  } else {
+    res.send("Uh are not fuckin driver");
   }
-    
-  
-  }
+}
 
 // ==================================================
 
@@ -404,12 +395,11 @@ async function signuserdata(req, res) {
     res.send(data);
     console.log("Done");
   }
-
 }
 
 // ==================================Loginuser=================================
 // app.post("/loginuserdata",
-async function loginuserdata(req,res) {
+async function loginuserdata(req, res) {
   try {
     // console.log("HI");
     const Lemail = req.body.Lemail;
@@ -417,24 +407,31 @@ async function loginuserdata(req,res) {
     console.log(req.body);
 
     const loginuser = await usersign.Userdetails.findOne({ Email: Lemail });
+    if(!loginuser){
+      res.send("User doesn't exist")
+    }
     console.log(loginuser);
     console.log("loginuser.email", loginuser.Email);
     const myid = loginuser._id;
-  
-    if (loginuser.Email === Lemail && loginuser.Password === Lpassword) {
-      const tokenn = jwt.sign({ _id: myid }, "adshashbdasbh");
-      // loginuser.genAuthToken(myid);
 
-      console.log(tokenn, "login side token");
-      res.send(tokenn);
-      // res.send("You Are Verified");
-      // console.log("Verified");
-    } else {
-      console.log("hi");
-      res.send("bhakk");
+    if (loginuser.Email === Lemail && loginuser.Password === Lpassword) {
+      if (loginuser.IsVerified === "true") {
+        const tokenn = jwt.sign({ _id: myid }, "adshashbdasbh");
+        // loginuser.genAuthToken(myid);
+
+        console.log(tokenn, "login side token");
+        res.send(tokenn);
+        res.send("You Are Verified");
+        console.log("Verified");
+      }
+      else{
+        res.send("You are not verified")
+      }
+    }else{
+      res.send("user not matched")
     }
   } catch (error) {
-    res.send(error);
+      res.send(error);
   }
 }
 
@@ -471,7 +468,7 @@ async function sendOtp(req, res) {
     let otpdata = await service.otpService.sendOtp(sendotpobj);
     res.send("otp code send to ur register number");
   } catch (error) {
-    res.status(400).send(error);  
+    res.status(400).send(error);
   }
 }
 // ==========================================
@@ -550,118 +547,148 @@ async function sendotpagain(req, res) {
   res.send("send otp again success");
 }
 // =================================================
-function verify(req,res,next){  
-  const token = req.header("authorization")
+function verify(req, res, next) {
+  const token = req.header("authorization");
   // console.log(token + "verify side token");
   const tokenslice = token.slice(7);
-//  console.log(tokenslice);
-    jwt.verify(tokenslice,"adshashbdasbh",function(err,decode){
-      if(err) throw res.send("You are not verified")
-      req.data = decode._id
-      console.log("verified");
-      // console.log(decode);
-   
-      // if(err)
-      //   res.send("token is not set");
-      next()
-      
-  })
+  //  console.log(tokenslice);
+  jwt.verify(tokenslice, "adshashbdasbh", function (err, decode) {
+    if (err) throw res.send("You are not verified");
+    req.data = decode._id;
+    console.log("verified");
+    // console.log(decode);
+
+    // if(err)
+    //   res.send("token is not set");
+    next();
+  });
 }
 // ============================================================================
 // ==========================================hybrid===================================
-//  
+//
 // =========================================
-async function showtaxi(req,res){
-  let mytaxi= await myCarRegister.CarRegistermodel.aggregate([
+async function showtaxi(req, res) {
+  let mytaxi = await myCarRegister.CarRegistermodel.aggregate([
     {
-      $lookup:{
-        from:"usersigndatas",
-        localField:"driverId",
-        foreignField:"_id",
-        as:"users"
-      }
-    },{
-      $project:{
-          carname: "$name",
-          modelname:"$model",
-          vehicle_type:"$vehicle",
-          rate_hourly:"rate_hourly",
-          rate_per_day:"rate_per_day",
+      $match: { cartype: req.query.cartype },
+    },
+    {
+      $lookup: {
+        from: "taximages",
+        localField: "_id",
+        foreignField: "vehicle_id",
+        as: "taxis",
+      },
+    },
+    {
+      $project: {
+        image: "$taxis.imgpath",
+        vehiclename: "$name",
+        model: "$model",
+        rate_hourly: "$rate_hourly",
+        rate_per_day: "$rate_per_day",
+        passenger: "$passenger",
+      },
+    },
+  ]);
+  res.send(mytaxi);
+}
 
-          drivername: "$users.FirstName",
-          phone: "$users.Phone"
-      }
-    }
-  ])
-  res.send(mytaxi)
-} 
-
-
-async function showdriverbookings(req,res){
+async function showdriverbookings(req, res) {
   try {
-    
+    let mybooking = await taxim.Booktaxi.aggregate([
+      {
+        $project: {
+          Name: "$name",
+          Time: "$time",
+          Phone: "$phone",
+          Pickup: "$pickupaddress",
+          Drop: "$dropoffaddress",
+          Passenger: "$passenger",
+          date: "$date",
+          cartype: "$cartype",
+        },
+      },
+    ]);
+    // let urbooking= mybooking.findOne(req.query)
 
-  let mybooking = await taxim.Booktaxi.aggregate([
-    {
-      $project:{
-        Name: "$name",
-        Time: "$time",
-        Phone: "$phone",
-        Pickup:"$pickupaddress",
-        Drop:"$dropoffaddress",
-        Passenger:"$passenger",
-        date:"$date",
-        cartype:"$cartype"
-               
-      }
-    }
-  ])
-  // let urbooking= mybooking.findOne(req.query)
-
-  
-  
-  res.send(mybooking)
-} catch (error) {
-    res.send(error)
-}
+    res.send(mybooking);
+  } catch (error) {
+    res.send(error);
+  }
 }
 
-
-async function mycartype(req,res){
+async function mycartype(req, res) {
   // console.log(req.query);
-  let mycartype=await myCarRegister.CarRegistermodel.find(req.query,{_id:0,name:1,template_no:1,rate_hourly:1,rate_per_day: 1,passenger: 1})
+  let mycartype = await myCarRegister.CarRegistermodel.find(req.query, {
+    _id: 0,
+    name: 1,
+    template_no: 1,
+    rate_hourly: 1,
+    rate_per_day: 1,
+    passenger: 1,
+  });
   console.log(mycartype);
-  res.send(mycartype)
+  res.send(mycartype);
 }
 
- async function boooked(req,res){
-   
-  const bookdata = await taxim.Booktaxi.updateOne(
-    { phone :  phone},
+//  async function clickthecar(req,res){
+//    try{
+//     const themore=req.query
+//      const data = await taxim.Booktaxi.findOne(themore);
+//      console.log(data.userid,"you");
 
-    { $set: { booking_status: "Booked" } }
-  )
- }
+//     let userdata=await taxim.Booktaxi.updateOne({userid:data.userid},
+//       { $set: { booking_status: "Booked"}, })
+//     res.send("done")
+//    }catch(error){
+//         res.send(error)
+//    }
+//  }
 
- async function clickthecar(req,res){
-   try{
-     
-    // console.log(req.query);
-    const themore=req.query
-    // console.log(themore,"Myid");
-     const data = await taxim.Booktaxi.findOne(themore);
-     console.log(data.userid,"you");
-    //  console.log(data);
+async function bookthiscar(req, res) {
+  try {
+    const mysh = req.data;
+    console.log(mysh);
+    const lala = await usersign.Userdetails.findOne({ _id: req.data });
+    console.log(lala.FirstName);
+    let thename = lala.FirstName;
 
-    let userdata=await taxim.Booktaxi.updateOne({userid:data.userid},
-      { $set: { booking_status: "Booked", accepted_by:data.name } })
-    res.send("done")
-   }catch(error){
-        res.send(error)
-   }
- }
+    let llo = req.query.bookingid;
+    console.log(llo);
 
+    // let mydata = await taxim.Booktaxi.updateOne({_id:llo},
+    //   {$set:{accepted_by:"done"}})
+    //   console.log(mydata);
 
+    let data = await taxim.Booktaxi.updateOne(
+      { _id: llo },
+      { $set: { accepted_by: thename, booking_status: "Booked " } }
+    );
+    console.log(data);
+    // res.send(data)
+    // id= req.query
+    // let thedata= await taxim.Booktaxi.findOne();
 
+    // const data = await taxim.Booktaxi.findOne();
 
+    // let itsdata
+    res.send("hogya");
+  } catch (error) {
+    res.send(error);
+  }
+}
+async function cancelbooking(req, res) {
+  const lala = await usersign.Userdetails.findOne({ _id: req.data });
+  console.log(lala.FirstName);
+  let thename = lala.FirstName;
 
+  let canceled = req.query.bookingid;
+  console.log(canceled);
+  const thedata = await taxim.Booktaxi.updateOne(
+    { _id: canceled },
+    { $set: { accepted_by: "Canceled", booking_status: "Canceled" } }
+  );
+  console.log(thedata);
+  res.send("gyi");
+}

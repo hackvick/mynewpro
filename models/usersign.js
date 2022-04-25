@@ -45,7 +45,8 @@ const userschema = new schema({
 
     // }
     
-})
+},
+{timestamps:true})
 
 const Userdetails=new mongoose.model("usersigndata",userschema)
 module.exports= {Userdetails}
