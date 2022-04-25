@@ -3,19 +3,19 @@ const schema=mongoose.Schema
 const userschema = new schema({
     FirstName:{
         type: String,
-        required:true
+        // required:true
     },
     LastName:{
         type:String,
-        required:true
+        // required:true
     },
     Email:{
         type:String,
-        required:true
+        // required:true
     },
     Phone:{
         type:Number,
-        required:true
+        // required:true
     },
     Password:{
         type:String,

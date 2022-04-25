@@ -378,7 +378,7 @@ async function signuserdata(req, res) {
     Phone: req.body.Phone,
     Password: req.body.Password,
     UserType: req.body.UserType,
-    // Profile_Pic: req.file.path,
+    Profile_Pic: req.file.path,
     otp: req.body.otp,
     isVerified: false,
   });

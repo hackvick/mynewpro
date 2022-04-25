@@ -16,6 +16,7 @@ router.post("/carregister",Controller.usercontroller.verify,upload.array('image'
 router.post('/bookthetaxi',upload.single('image'),Controller.usercontroller.verify,Controller.usercontroller.bookMyTaxi)
 router.post('/bookthiscar',Controller.usercontroller.verify,Controller.usercontroller.bookthiscar)
 router.post('/canceltaxi',Controller.usercontroller.verify,Controller.usercontroller.cancelbooking)
+router.post('/resendotp',Controller.usercontroller.verify,Controller.usercontroller.sendotpagain)
 // ===================================
 router.get('/showtaxi',Controller.usercontroller.showtaxi)
 router.get('/showbooking',Controller.usercontroller.showdriverbookings)
