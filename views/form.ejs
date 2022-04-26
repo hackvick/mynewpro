@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <title>Sign Up Panel</title>
+    <style>
+      .body {
+        background-image: url("/bin.jpg");
+        background-size: cover;
+        /* background-color: rgb(21, 255, 0); */
+        
+        
+    
+      }
+
+      .div1 {
+        margin-top: 10px;
+        /* border: 2px solid black; */
+        margin-left: 450px;
+        height: fit-content;
+        width: 40%;
+        background-color: white;
+      }
+      h1 {
+        text-align: center;
+        background-color: rgba(123, 255, 0, 0.76);
+      }
+      input {
+        border-radius: 20px;
+        width: 70%;
+        margin-top: 20px;
+        padding: 12px 10px;
+        margin-left: 60px;
+      }
+      #btn {
+        border-radius: 7px;
+        margin-top: 20px;
+        padding: 8px 10px;
+        margin-left: 130px;
+        width: 50%;
+        margin-bottom: 20px;
+      }
+      .divimage {
+        /* border: 2px solid black; */
+        width: 30%;
+        height: 150px;
+        margin: auto;
+        border-radius: 50%;
+        /* background-image: url("image/profile.jpg"); */
+      }
+      #accept {
+      
+        offset: 0;
+        outline: none;
+        color: transparent;
+        margin-top: 0px;
+        margin-left: 33px;
+        margin-bottom: 0px;
+        cursor: pointer;
+        transition: 0.5s;
+        /* padding: 15px 150px; */
+      }
+
+      p {
+        
+        text-align: center;
+        margin: 0%;
+        font-size: 30px;
+      }
+      #output {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+      }
+    </style>
+
+  </head>
+  <body class="body">
+
+    <form action="/signup" method="POST">
+    <div class="div1">
+      <h1>HEY BUDDY</h1>
+
+      <div class="divimage"><img src="" alt="" id="output" /></div>
+      <br />
+
+      <p>Choose Your Profile Picture</p>
+      <input type="file"accept="image/*"name="image" id="accept" onchange="loadfile(event)"
+      />
+      <input type="text" name ="firstname" id="my_firstname" placeholder="FIRST NAME" size="50"
+      />
+      <input type="text" name="lastname" id="my_lastname" placeholder="LAST NAME" />
+      <br />
+      <input type="email" name="email" id="my_email" placeholder="EMAIL" />
+      <input type="password" name="password" id="my_password" placeholder="PASSWORD" />
+      <br />
+      <input type="text" name="address" id="my_address" placeholder="ADDRESS" />
+      <input type="number" name="dob" id="my_dob" placeholder=" AGE" />
+      <br />
+
+      <input type="submit" id = "btn" value="register">
+      <!-- <button id="btn" value="register" onclick="getdata()">register</button> -->
+    </div>
+
+    </form>
+    <script>
+      var loadfile = function (event) {
+        var image = document.getElementById("output");
+        image.src = URL.createObjectURL(event.target.files[0]);
+      };
+      // function getdata() {
+      //   var Firstname = document.getElementById("my_firstname").value;
+      //   var Lastname = document.getElementById("my_lastname").value;
+      //   var Email = document.getElementById("my_email").value;
+      //   var Address = document.getElementById("my_address").value;
+      //   var Dob = document.getElementById("my_dob").value;
+      //   var image = document.getElementById("accept").value;
+      //   var obj = {
+      //     Firstname: Firstname,
+      //     Lastname: Lastname,
+      //     Email: Email,
+      //     Address: Address,
+      //     DateOfBirth: Dob,
+      //     Image: image,
+      //   };
+        // console.log(obj);
+      
+    </script>
+  </body>
+</html>
