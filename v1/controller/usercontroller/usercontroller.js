@@ -511,17 +511,17 @@ async function matchmyotp(req, res) {
   let Number = req.body.Number;
   // console.log(otp, Number);
   let data = await usersign.Userdetails.findOne({ Phone: Number });
-  console.log(data.otp);
+  //  console.log(data.otp);
   if (data.otp === otp) {
     let userData = await usersign.Userdetails.updateOne(
       { _id: data._id },
 
       { $set: { IsVerified: true } }
     );
-    console.log("done");
+    // console.log("done");
     res.send("done");
   } else {
-    console.log("not");
+    // console.log("not");
     res.send("error");
   }
 }
